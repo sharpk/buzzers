@@ -25,11 +25,15 @@
 #define BUZZER4_PIN 4
 #define RESET_PIN 3
 
+// Add LED pin defs here
+
 char counter;
 char resetFlag;
 char blinkState[NUM_BUZZERS];
 const char buzzerPinMap[] = {BUZZER1_PIN, BUZZER2_PIN, BUZZER3_PIN, BUZZER4_PIN};
 char pinBuzzerMap[14];
+
+// Add LED TimedAction objects here
 
 void pcintBuzzFunc() {
 	PCintPort::detachInterrupt(PCintPort::arduinoPin);
@@ -57,6 +61,12 @@ void reset() {
 
 void setup() {
 	int i;
+	
+	Serial.begin(9600);
+	Serial.println("Initializing Buzzers...");
+	
+	// Init LEDs here
+	
 	for (i=0; i<14; i++)
 		pinBuzzerMap[i] = -1;
 	
@@ -68,8 +78,7 @@ void setup() {
 	pinMode(RESET_PIN, INPUT); digitalWrite(RESET_PIN, HIGH);
 	PCintPort::attachInterrupt(RESET_PIN, &pcintResetFunc, FALLING);
 	
-	Serial.begin(9600);
-	Serial.println("Querencia Buzzer Started...");
+	Serial.println("Buzzers Started...");
 }
 
 void loop() {
