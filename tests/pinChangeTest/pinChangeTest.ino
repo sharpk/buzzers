@@ -25,7 +25,7 @@
 #define INPUT4_PIN 4
 #define RESET_PIN 3
 
-char times[NUM_INPUTS];
+unsigned long times[NUM_INPUTS];
 const char pinMap[] = {INPUT1_PIN, INPUT2_PIN, INPUT3_PIN, INPUT4_PIN};
 
 void pcintFunc() {
