@@ -17,6 +17,7 @@
 // #define       DISABLE_PCINT_MULTI_SERVICE
 //-------- define the above in your sketch, if applicable ------------------------------------------------------
 #include <PinChangeInt.h>
+#include <TimedAction.h>
 
 #define NUM_BUZZERS 4
 #define BUZZER1_PIN 7
@@ -25,20 +26,82 @@
 #define BUZZER4_PIN 4
 #define RESET_PIN 3
 
-// Add LED pin defs here
+#define LED_ON 0
+#define LED_OFF 1
+#define LED1 2
+#define LED2 8
+#define LED3 9
+#define LED4 10
 
 char counter;
 char resetFlag;
-char blinkState[NUM_BUZZERS];
 const char buzzerPinMap[] = {BUZZER1_PIN, BUZZER2_PIN, BUZZER3_PIN, BUZZER4_PIN};
+const char ledPinMap[] = {LED1, LED2, LED3, LED4};
+TimedAction* buzzerActionMap[NUM_BUZZERS];
 char pinBuzzerMap[14];
 
-// Add LED TimedAction objects here
+void blink1() {
+	static char state = LED_OFF;
+	if (state == LED_ON)
+		state = LED_OFF;
+	else
+		state = LED_ON;
+		
+	digitalWrite(LED1, state);
+}
+
+void blink2() {
+	static char state = LED_OFF;
+	if (state == LED_ON)
+		state = LED_OFF;
+	else
+		state = LED_ON;
+		
+	digitalWrite(LED2, state);
+}
+
+void blink3() {
+	static char state = LED_OFF;
+	if (state == LED_ON)
+		state = LED_OFF;
+	else
+		state = LED_ON;
+		
+	digitalWrite(LED3, state);
+}
+
+void blink4() {
+	static char state = LED_OFF;
+	if (state == LED_ON)
+		state = LED_OFF;
+	else
+		state = LED_ON;
+		
+	digitalWrite(LED4, state);
+}
+
+TimedAction blink1Action = TimedAction(1000, blink1);
+TimedAction blink2Action = TimedAction(500, blink2);
+TimedAction blink3Action = TimedAction(250, blink3);
+TimedAction blink4Action = TimedAction(100, blink4);
 
 void pcintBuzzFunc() {
+	char tmpCnt, buzzer;
 	PCintPort::detachInterrupt(PCintPort::arduinoPin);
-	blinkState[pinBuzzerMap[PCintPort::arduinoPin]] = counter;
-	counter++;
+	tmpCnt = counter++;
+	buzzer = pinBuzzerMap[PCintPort::arduinoPin];
+	switch (tmpCnt) {
+		case 0:
+			digitalWrite(ledPinMap[buzzer], LED_ON);
+		case 1:
+			buzzerActionMap[buzzer]->setInterval(250);
+			buzzerActionMap[buzzer]->enable();
+		case 2:
+			buzzerActionMap[buzzer]->setInterval(500);
+			buzzerActionMap[buzzer]->enable();
+		default:
+			digitalWrite(ledPinMap[buzzer], LED_OFF);
+	}
 }
 
 void pcintResetFunc() {
@@ -50,9 +113,15 @@ void reset() {
 	counter = 0;
 	resetFlag = 0;
 	
-	for (i=0; i<NUM_BUZZERS; i++)
-		blinkState[i] = 0;
-		
+	for (i=0; i<NUM_BUZZERS; i++) {
+		buzzerActionMap[i]->disable();
+	}
+	
+	digitalWrite(LED1, LED_OFF);
+	digitalWrite(LED2, LED_OFF);
+	digitalWrite(LED3, LED_OFF);
+	digitalWrite(LED4, LED_OFF);
+	
 	for (i=0; i<NUM_BUZZERS; i++) {
 		pinMode(buzzerPinMap[i], INPUT); digitalWrite(buzzerPinMap[i], HIGH);
 		PCintPort::attachInterrupt(buzzerPinMap[i], &pcintBuzzFunc, FALLING);
@@ -65,14 +134,22 @@ void setup() {
 	Serial.begin(9600);
 	Serial.println("Initializing Buzzers...");
 	
-	// Init LEDs here
+	pinMode(LED1, OUTPUT);
+	pinMode(LED2, OUTPUT);
+	pinMode(LED3, OUTPUT);
+	pinMode(LED4, OUTPUT);
 	
 	for (i=0; i<14; i++)
 		pinBuzzerMap[i] = -1;
 	
 	for (i=0; i<NUM_BUZZERS; i++)
 		pinBuzzerMap[buzzerPinMap[i]] = i;
-
+	
+	buzzerActionMap[0] = &blink1Action;
+	buzzerActionMap[1] = &blink2Action;
+	buzzerActionMap[2] = &blink3Action;
+	buzzerActionMap[3] = &blink4Action;
+	
 	reset();
 	
 	pinMode(RESET_PIN, INPUT); digitalWrite(RESET_PIN, HIGH);
@@ -82,11 +159,12 @@ void setup() {
 }
 
 void loop() {
-	// go through all the buzzers and blink the right pattern on LEDs
-
-
-	if (resetFlag) {
-		reset();
+	int i;
+	for (i=0; i<NUM_BUZZERS; i++) {
+		buzzerActionMap[i]->check();
+		
+		if (resetFlag)
+			reset();
 	}
 }
 
