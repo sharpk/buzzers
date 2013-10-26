@@ -19,6 +19,8 @@
 #include <PinChangeInt.h>
 #include <TimedAction.h>
 
+#define DBG
+
 #define NUM_BUZZERS 4
 #define BUZZER1_PIN 7
 #define BUZZER2_PIN 6
@@ -26,8 +28,8 @@
 #define BUZZER4_PIN 4
 #define RESET_PIN 3
 
-#define LED_ON 0
-#define LED_OFF 1
+#define LED_ON 1
+#define LED_OFF 0
 #define LED1 2
 #define LED2 8
 #define LED3 9
@@ -90,6 +92,13 @@ void pcintBuzzFunc() {
 	PCintPort::detachInterrupt(PCintPort::arduinoPin);
 	tmpCnt = counter++;
 	buzzer = pinBuzzerMap[PCintPort::arduinoPin];
+#ifdef DBG
+	Serial.print((int)tmpCnt);
+	Serial.print(" ");
+	Serial.print((int)counter);
+	Serial.print(" ");
+	Serial.println(PCintPort::arduinoPin);
+#endif
 	switch (tmpCnt) {
 		case 0:
 			digitalWrite(ledPinMap[buzzer], LED_ON);
