@@ -102,14 +102,18 @@ void pcintBuzzFunc() {
 	switch (tmpCnt) {
 		case 0:
 			digitalWrite(ledPinMap[buzzer], LED_ON);
+			break;
 		case 1:
 			buzzerActionMap[buzzer]->setInterval(250);
 			buzzerActionMap[buzzer]->enable();
+			break;
 		case 2:
 			buzzerActionMap[buzzer]->setInterval(500);
 			buzzerActionMap[buzzer]->enable();
+			break;
 		default:
 			digitalWrite(ledPinMap[buzzer], LED_OFF);
+			break;
 	}
 }
 
