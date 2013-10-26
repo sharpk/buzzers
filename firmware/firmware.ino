@@ -104,7 +104,7 @@ void pcintBuzzFunc() {
 			digitalWrite(ledPinMap[buzzer], LED_ON);
 			break;
 		case 1:
-			buzzerActionMap[buzzer]->setInterval(250);
+			buzzerActionMap[buzzer]->setInterval(100);
 			buzzerActionMap[buzzer]->enable();
 			break;
 		case 2:
