@@ -41,6 +41,7 @@
 
 char counter;
 char resetFlag;
+char first;
 const char buzzerPinMap[] = {BUZZER1_PIN, BUZZER2_PIN, BUZZER3_PIN, BUZZER4_PIN};
 const char ledPinMap[] = {LED1, LED2, LED3, LED4, BUZZER_LED1, BUZZER_LED2, BUZZER_LED3, BUZZER_LED4};
 TimedAction* buzzerActionMap[NUM_BUZZERS];
@@ -52,8 +53,11 @@ void blink1() {
 		state = LED_OFF;
 	else
 		state = LED_ON;
-		
-	digitalWrite(LED1, state);
+	
+	if (first == 1)
+		digitalWrite(BUZZER_LED1, state);
+	else
+		digitalWrite(LED1, state);
 }
 
 void blink2() {
@@ -62,8 +66,11 @@ void blink2() {
 		state = LED_OFF;
 	else
 		state = LED_ON;
-		
-	digitalWrite(LED2, state);
+
+	if (first == 2)
+		digitalWrite(BUZZER_LED2, state);
+	else
+		digitalWrite(LED2, state);
 }
 
 void blink3() {
@@ -73,7 +80,10 @@ void blink3() {
 	else
 		state = LED_ON;
 		
-	digitalWrite(LED3, state);
+	if (first == 3)
+		digitalWrite(BUZZER_LED3, state);
+	else		
+		digitalWrite(LED3, state);
 }
 
 void blink4() {
@@ -83,13 +93,16 @@ void blink4() {
 	else
 		state = LED_ON;
 		
-	digitalWrite(LED4, state);
+	if (first == 4)
+		digitalWrite(BUZZER_LED4, state);
+	else		
+		digitalWrite(LED4, state);
 }
 
 TimedAction blink1Action = TimedAction(1000, blink1);
-TimedAction blink2Action = TimedAction(500, blink2);
-TimedAction blink3Action = TimedAction(250, blink3);
-TimedAction blink4Action = TimedAction(100, blink4);
+TimedAction blink2Action = TimedAction(1000, blink2);
+TimedAction blink3Action = TimedAction(1000, blink3);
+TimedAction blink4Action = TimedAction(1000, blink4);
 
 void pcintBuzzFunc() {
 	char tmpCnt, buzzer;
@@ -105,7 +118,10 @@ void pcintBuzzFunc() {
 #endif
 	switch (tmpCnt) {
 		case 0:
+			first = buzzer+1;
 			digitalWrite(ledPinMap[buzzer], LED_ON);
+			buzzerActionMap[buzzer]->setInterval(250);
+			buzzerActionMap[buzzer]->enable();
 			break;
 		case 1:
 			buzzerActionMap[buzzer]->setInterval(100);
@@ -129,6 +145,7 @@ void reset() {
 	int i;
 	counter = 0;
 	resetFlag = 0;
+	first = 0;
 	
 	for (i=0; i<NUM_BUZZERS; i++)
 		buzzerActionMap[i]->disable();
