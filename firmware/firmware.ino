@@ -34,11 +34,15 @@
 #define LED2 8
 #define LED3 9
 #define LED4 10
+#define BUZZER_LED1 A0
+#define BUZZER_LED2 A1
+#define BUZZER_LED3 A2
+#define BUZZER_LED4 A3
 
 char counter;
 char resetFlag;
 const char buzzerPinMap[] = {BUZZER1_PIN, BUZZER2_PIN, BUZZER3_PIN, BUZZER4_PIN};
-const char ledPinMap[] = {LED1, LED2, LED3, LED4};
+const char ledPinMap[] = {LED1, LED2, LED3, LED4, BUZZER_LED1, BUZZER_LED2, BUZZER_LED3, BUZZER_LED4};
 TimedAction* buzzerActionMap[NUM_BUZZERS];
 char pinBuzzerMap[14];
 
@@ -126,14 +130,11 @@ void reset() {
 	counter = 0;
 	resetFlag = 0;
 	
-	for (i=0; i<NUM_BUZZERS; i++) {
+	for (i=0; i<NUM_BUZZERS; i++)
 		buzzerActionMap[i]->disable();
-	}
 	
-	digitalWrite(LED1, LED_OFF);
-	digitalWrite(LED2, LED_OFF);
-	digitalWrite(LED3, LED_OFF);
-	digitalWrite(LED4, LED_OFF);
+	for (i=0; i< NUM_BUZZERS*2; i++)
+		digitalWrite(ledPinMap[i], LED_OFF);
 	
 	for (i=0; i<NUM_BUZZERS; i++) {
 		pinMode(buzzerPinMap[i], INPUT); digitalWrite(buzzerPinMap[i], HIGH);
@@ -147,10 +148,8 @@ void setup() {
 	Serial.begin(9600);
 	Serial.println("Initializing Buzzers...");
 	
-	pinMode(LED1, OUTPUT);
-	pinMode(LED2, OUTPUT);
-	pinMode(LED3, OUTPUT);
-	pinMode(LED4, OUTPUT);
+	for (i=0; i< NUM_BUZZERS*2; i++)
+		pinMode(ledPinMap[i], OUTPUT);
 	
 	for (i=0; i<14; i++)
 		pinBuzzerMap[i] = -1;
