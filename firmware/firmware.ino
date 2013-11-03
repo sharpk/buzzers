@@ -68,7 +68,7 @@ void blink1() {
 		}
 	}
 	else {		
-		digitalWrite(LED4, state);
+		digitalWrite(LED1, state);
 	}
 }
 
@@ -87,7 +87,7 @@ void blink2() {
 		}
 	}
 	else {		
-		digitalWrite(LED4, state);
+		digitalWrite(LED2, state);
 	}
 }
 
