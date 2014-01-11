@@ -35,10 +35,10 @@
 #define LED2 8
 #define LED3 9
 #define LED4 10
-#define BUZZER_LED1 A0
-#define BUZZER_LED2 A1
-#define BUZZER_LED3 A2
-#define BUZZER_LED4 A3
+#define BUZZER_LED1 A3
+#define BUZZER_LED2 A2
+#define BUZZER_LED3 A1
+#define BUZZER_LED4 A0
 
 char counter;
 char resetFlag;
