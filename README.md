@@ -4,7 +4,7 @@
 ![IMG](buzzers.JPG)
 
 
-This project is a set of quiz show style buzzers.  The brains of the operation is an Arduino, which is attached to 4 button boxes equipped with a large button and a series of colored LEDs.  The main control box houses the arduino and 4 indicator LEDs that display the order in which the buzzers are pressed.
+This project is a set of quiz show style buzzers.  The brains of the operation is an Arduino, which is attached to 4 button boxes equipped with a large button and a series of colored LEDs.  The main control box houses the arduino and 4 indicator LEDs that display the order in which the buzzers are pressed.  For more on the construction of the buzzers, see this [blog post](http://sharpk60.blogspot.com/2014/12/quiz-show-buzzers.html).
 
 ###**Setup**
 
